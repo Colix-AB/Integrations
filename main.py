@@ -15,7 +15,7 @@ def fetch_users():
     """Fetch users from the API."""
 
     # Bearer token
-    colix_bearer_token = Secret.load("colix-bearer-token").get()
+    colix_bearer_token = Secret.load("colix-bearer-token")
 
     # Add the token to the Authorization header
     headers = {
@@ -45,7 +45,7 @@ def send_slack_notification(users,filter_param):
     """Send a Slack message with the filtered output."""
 
     # Slack token for your bot
-    webhook_url = Secret.load("webhook-url").get()
+    webhook_url = Secret.load("webhook-url")
 
 
     # Prepare the message content
