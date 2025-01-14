@@ -2,6 +2,8 @@ import requests
 from prefect import flow
 from prefect import task
 from prefect.context import get_run_context
+from prefect.runner.storage import GitRepository
+from prefect.blocks.system import Secret
 
 import json
 
@@ -13,11 +15,11 @@ def fetch_users():
     """Fetch users from the API."""
 
     # Bearer token
-    bearer_token = "secret"
+    colix_bearer_token = Secret.load("colix-bearer-token").get()
 
     # Add the token to the Authorization header
     headers = {
-        "Authorization": f"Bearer {bearer_token}"
+        "Authorization": f"Bearer {colix_bearer_token}"
     }
 
     response = requests.get(API_URL, headers=headers)
@@ -41,10 +43,10 @@ def filter_users(users,filter_param):
 @task
 def send_slack_notification(users,filter_param):
     """Send a Slack message with the filtered output."""
-    context = get_run_context()
 
     # Slack token for your bot
-    webhook_url = "secret"
+    webhook_url = Secret.load("webhook-url").get()
+
 
     # Prepare the message content
     message = {
